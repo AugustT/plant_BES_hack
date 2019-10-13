@@ -7,7 +7,7 @@ source('toms_tokens.R')
 tokens <- toms_tokens()
 
 # Get the image data
-photo_meta <- photo_search(mindate_taken = "2018-03-01",
+photo_meta <- photo_search(mindate_taken = "2000-03-01",
                            maxdate_taken = "2019-10-01",
                            text = "flower",
                            # tags = "flower",
@@ -18,9 +18,6 @@ photo_meta <- photo_search(mindate_taken = "2018-03-01",
 
 nrow(photo_meta)
 
-write.csv(file = 'photo_metadata.csv',
-          x = photo_meta)
-
 # x <- T
 # while(x){
 #   browseURL(photo_meta$url_s[runif(1, 1, nrow(photo_meta))])
@@ -28,13 +25,32 @@ write.csv(file = 'photo_metadata.csv',
 #   if(l=='e') x <- F
 # }
 
-# Classify these images and save as we go
-browseURL(photo_meta$url_l[2])
+write.csv(file = 'photo_metadata.csv',
+          x = photo_meta)
 
-for(i in 1:4500){#nrow(photo_meta)){
+###############
+# repeat runs #
+###############
+
+photo_meta <- read.csv('photo_metadata.csv')
+photo_meta$datetaken <- as.Date(photo_meta$datetaken)
+photo_meta <- photo_meta[order(photo_meta$datetaken, decreasing = TRUE),]
+
+nrow(photo_meta)
+
+ided_already <- read.csv('id_results.csv', header = FALSE)
+ided_already$V5 <- as.Date(ided_already$V5, format = '%d/%m/%Y %H:%M')
+
+photo_meta <- photo_meta[!photo_meta$id %in% ided_already$V2,]
+nrow(photo_meta)
+
+# Classify these images and save as we go
+browseURL(as.character(photo_meta$url_l[2]))
+
+for(i in 1:5000){#nrow(photo_meta)){
   cat('image', i,'\n')
   id <- identify(key = tokens$plantnet,
-                 imageURL = photo_meta$url_l[i])
+                 imageURL = as.character(photo_meta$url_l[i]))
   if(length(id) > 1){ # we have an id... else we dont
     id_full <- c(photo_meta[i, c('id', 'owner', 'title',
                                  'datetaken', 'latitude',
