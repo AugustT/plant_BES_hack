@@ -1,19 +1,15 @@
 library(shiny)
 library(DT)
-# library(leaflet)
-# # library(photosearcher)
-# # library(plantnet)
-# 
-# ##
+library(leaflet)
+# library(photosearcher)
+# library(plantnet)
+
 photo_data <- read.csv('id_results.csv',
                          col.names = c('row','id', 'owner', 'title',
                                      'datetaken', 'latitude',
                                      'longitude', 'url_s', 'score',
                                      'latin_name', 'common_name'),
                          allowEscapes = TRUE)
-
-#testing
-# photo_data <- photo_data[1:200,]
 
 ui <- fluidPage(
   titlePanel("AI validated plant observations in London"),
@@ -62,8 +58,6 @@ server <- function(input,output) {
                                                   " width='100%'></p>")))
 
   output$mymap <- renderLeaflet(map)
-  
-  output$table <- renderTable(photo_data)
   
   output$tableDT <- DT::renderDataTable(photo_data, quoted = TRUE)
 
