@@ -11,6 +11,9 @@ photo_data <- read.csv('id_results.csv',
                                      'latin_name', 'common_name'),
                          allowEscapes = TRUE)
 
+# drop the firsrt column
+photo_data <- photo_data[,-1]
+
 ui <- fluidPage(
   titlePanel("AI validated plant observations in London"),
   navbarPage("",
@@ -45,7 +48,7 @@ server <- function(input,output) {
   
   map <- leaflet() %>%
           addTiles() %>%
-          setView(-0.096024, 51.531786,  zoom = 12) %>%
+          setView(-0.142630, 51.501130,  zoom = 14) %>%
           addAwesomeMarkers(data = photo_data,
                             clusterOptions = markerClusterOptions(),
                             lng = photo_data$longitude,
@@ -55,11 +58,30 @@ server <- function(input,output) {
                                                  paste0('<i>(', photo_data$latin_name, ')</i>')),
                                            paste0("<p><b>Score:</b>", round(photo_data$score, digits = 2), '</p>'),
                                            paste0("<p><img src = ", photo_data$url_s,
-                                                  " width='100%'></p>")))
+                                                  " width='100%'></p>")),
+                            popupOptions = list(keepInView = TRUE,
+                                             zoomAnimation = TRUE))
 
   output$mymap <- renderLeaflet(map)
   
-  output$tableDT <- DT::renderDataTable(photo_data, quoted = TRUE)
+  output$tableDT <- DT::renderDataTable(photo_data,
+                                        quoted = TRUE,
+                                        extensions = 'Buttons',
+                                        options = list( 
+                                          dom = "Blfrtip",
+                                          buttons = 
+                                            list("copy", list(
+                                              extend = "collection",
+                                              buttons = c("csv", "excel", "pdf"),
+                                              text = "Download"
+                                            ) ), # end of buttons customization
+                                          
+                                          # customize the length menu
+                                          lengthMenu = list( c(10, 20, -1) # declare values
+                                                               , c(10, 20, "All") # declare titles
+                                          ), # end of lengthMenu customization
+                                          pageLength = 10 
+                                        ))
 
 }
 
