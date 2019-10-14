@@ -39,15 +39,21 @@ photo_meta <- photo_meta[order(photo_meta$datetaken, decreasing = TRUE),]
 nrow(photo_meta)
 
 ided_already <- read.csv('id_results.csv', header = FALSE)
-ided_already$V5 <- as.Date(ided_already$V5, format = '%d/%m/%Y %H:%M')
 
-photo_meta <- photo_meta[!photo_meta$id %in% ided_already$V2,]
+ided_already$V5 <- as.Date(ided_already$V5, format = '%Y-%m-%d')
+ided_already <- ided_already[!is.na(ided_already$V5), ]
+min(ided_already$V5)
+
+# Only work on those we dont have, using date
+# This accounts for images which dont get into the ided
+# csv because they did not resolve to a species identification
+photo_meta <- photo_meta[photo_meta$datetaken < min(ided_already$V5),]
 nrow(photo_meta)
 
 # Classify these images and save as we go
 browseURL(as.character(photo_meta$url_l[2]))
 
-for(i in 1:5000){#nrow(photo_meta)){
+for(i in 1:1000){#nrow(photo_meta)){
   cat('image', i,'\n')
   id <- identify(key = tokens$plantnet,
                  imageURL = as.character(photo_meta$url_l[i]))
@@ -64,3 +70,37 @@ for(i in 1:5000){#nrow(photo_meta)){
                 quote = TRUE)  
   }
 }
+
+### Merge extra info across
+photo_meta <- read.csv('photo_metadata.csv')
+ided_already <- read.csv('id_results.csv', header = FALSE)
+
+ided_already$license_code <- photo_meta$license[match(ided_already$V2, photo_meta$id)]
+head(ided_already)
+write.csv(ided_already, file = 'id_results.csv',
+          row.names = FALSE, col.names = FALSE)
+
+license_decode <- function(code){
+  switch(as.character(code),
+         "0" = "All Rights Reserved",
+         "1" = "Attribution-NonCommercial-ShareAlike License",
+         "2" = "Attribution-NonCommercial License",
+         "3" = "Attribution-NonCommercial-NoDerivs License",
+         "4" = "Attribution License",
+         "5" = "Attribution-ShareAlike License",
+         "6" = "Attribution-NoDerivs License",
+         "7" = "No known copyright restrictions",
+         "8" = "United States Government Work",
+         "9" = "Public Domain Dedication (CC0)",
+         "10" = "Public Domain Mark",
+         NA)
+}
+
+ided_already$license <- unlist(sapply(FUN = license_decode, X = ided_already$V12))
+write.table(file = 'id_results.csv',
+            x = ided_already,
+            sep = ',',
+            append = FALSE,
+            row.names = FALSE,
+            col.names = FALSE,
+            quote = TRUE)
