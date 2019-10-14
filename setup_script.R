@@ -40,7 +40,7 @@ nrow(photo_meta)
 
 ided_already <- read.csv('id_results.csv', header = FALSE)
 
-ided_already$V5 <- as.Date(ided_already$V5, format = '%Y-%m-%d')
+ided_already$V5 <- as.Date(ided_already$V5, format = '%d/%m/%Y')
 ided_already <- ided_already[!is.na(ided_already$V5), ]
 min(ided_already$V5)
 
@@ -53,6 +53,22 @@ nrow(photo_meta)
 # Classify these images and save as we go
 browseURL(as.character(photo_meta$url_l[2]))
 
+license_decode <- function(code){
+  switch(as.character(code),
+         "0" = "All Rights Reserved",
+         "1" = "Attribution-NonCommercial-ShareAlike License",
+         "2" = "Attribution-NonCommercial License",
+         "3" = "Attribution-NonCommercial-NoDerivs License",
+         "4" = "Attribution License",
+         "5" = "Attribution-ShareAlike License",
+         "6" = "Attribution-NoDerivs License",
+         "7" = "No known copyright restrictions",
+         "8" = "United States Government Work",
+         "9" = "Public Domain Dedication (CC0)",
+         "10" = "Public Domain Mark",
+         NA)
+}
+
 for(i in 1:1000){#nrow(photo_meta)){
   cat('image', i,'\n')
   id <- identify(key = tokens$plantnet,
@@ -61,7 +77,9 @@ for(i in 1:1000){#nrow(photo_meta)){
     id_full <- c(photo_meta[i, c('id', 'owner', 'title',
                                  'datetaken', 'latitude',
                                  'longitude', 'url_s')],
-                 id[1,])
+                 id[1,],
+                 photo_meta[i, 'license'],
+                 license_decode(photo_meta[i, 'license']))
     write.table(file = 'id_results.csv',
                 x = id_full,
                 sep = ',',
