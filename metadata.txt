@@ -1,0 +1,29 @@
+Metadata for 'August_et_al_2019.csv'
+
+Each row in this dataset represents an image on Flickr (https://www.flickr.com)
+
+Image metadata was retrieved from flickr using the photosearcher R-package (https://github.com/nfox29/photosearcher). The code used is below:
+
+photo_meta <- photo_search(mindate_taken = "2000-03-01",
+                           maxdate_taken = "2019-10-01",
+                           text = "flower",
+                           bbox = "-0.312836,51.439050,-0.005219,51.590237")
+                           
+The bounding box encompasses central London. While that date range in the query was 2000-03-01 to 2019-10-01 the range of images in the classified data set is from 2013-05-12 to 2019-09-30. 
+
+Classification of images was undertake using the plantnet R-package (https://github.com/BiologicalRecordsCentre/plantnet) which offers an interface to the PlantNet API (https://plantnet.org/en/; https://my-api.plantnet.org/). While the PlantNet classifier returns multiple classifications we retained only the top classification and its score. The resulting data is described below:
+
+image_id: The unique id for the image on flickr
+owner_id: The unique id for the owner of the image on Flickr
+title: The title of the image, given by the user
+datetaken: The date the image was taken. Rarely this might be the date the image was uploaded.
+latitude: latitude of the image location
+longitude: longitude of the image location
+classification_score: The score given to the species classification by the PlantNet API. This value ranges from 0 (not confident), to 1 (very confident)
+latin_name: Latin name assigned by PlantNet
+common_name_english: Common English name assigned by PlantNet
+license_code: The image license code (see https://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html)
+license: The license code, converted to readable text
+url_large_image: url for a large version of the image
+url_small_image: url for a small version of the image
+image_information_link: A link to a page with information on the image, including the owner name, full description if given, etc.

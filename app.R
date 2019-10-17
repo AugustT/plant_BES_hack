@@ -69,21 +69,23 @@ server <- function(input,output) {
                             lng = photo_data$longitude,
                             lat = photo_data$latitude,
                             icon = icons,
-                            popup = paste0(paste('<b>Species:</b>', photo_data$common_name,
+                            popup = paste0(paste0('<br><div style="max-height:400px;max-width:300px">',
+                                                  '<img src = ',
+                                                  photo_data$url_l,
+                                                  ' style="max-height:390px;max-width:290px"></div>'),
+                                           paste('<div><h4><b>Species:</b>', photo_data$common_name,
                                                  paste0('<i>(', photo_data$latin_name, ')</i>')),
-                                           paste0("<br><b>Score:</b>", round(photo_data$score, digits = 2), ''),
-                                           paste0("<br><img src = ", photo_data$url_l,
-                                                  " width='400px'>"),
-                                           paste0("<br>", photo_data$license),
+                                           paste0("<br><b>Score:</b>", round(photo_data$score, digits = 2), '</h4>'),
+                                           paste0(photo_data$license),
                                            paste0('<br><a href="',
                                                   paste0('https://www.flickr.com/photos/',
                                                          photo_data$owner, '/',
                                                          photo_data$id),
-                                                  '">Owner/Image details</a>')
+                                                  '"target="_blank">Owner/Image details</a></div>')
                                            ),
-                            popupOptions = list(keepInView = TRUE,
-                                                zoomAnimation = TRUE,
-                                                maxWidth = 500))
+                            popupOptions = list(minWidth = 280,
+                                                minWidth = 400,
+                                                maxHeight = 600))
 
   output$mymap <- renderLeaflet(map)
   
