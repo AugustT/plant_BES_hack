@@ -1,3 +1,4 @@
+rm(list=ls())
 library(shiny)
 library(DT)
 library(leaflet)
@@ -11,6 +12,9 @@ photo_data <- read.csv('id_results.csv',
                                      'latin_name', 'common_name',
                                      'license_code', 'license'),
                          allowEscapes = TRUE)
+# remove duplicates #
+photo_data <- dplyr::distinct(photo_data)
+
 
 # drop the firsrt column
 photo_data <- photo_data[,-1]
@@ -20,6 +24,7 @@ photo_data$longitude <- as.numeric(as.character(photo_data$longitude))
 photo_data$score <- as.numeric(as.character(photo_data$score))
 
 photo_data <- na.omit(photo_data)
+nrow(photo_data)
 
 ui <- fluidPage(
   titlePanel("AI validated plant observations in London"),
