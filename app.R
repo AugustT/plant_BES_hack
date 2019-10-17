@@ -10,7 +10,7 @@ photo_data <- read.csv('id_results.csv',
                                      'datetaken', 'latitude',
                                      'longitude', 'url_s', 'score',
                                      'latin_name', 'common_name',
-                                     'license_code', 'license'),
+                                     'license_code', 'license', 'url_l'),
                          allowEscapes = TRUE)
 # remove duplicates #
 photo_data <- dplyr::distinct(photo_data)
@@ -72,8 +72,8 @@ server <- function(input,output) {
                             popup = paste0(paste('<b>Species:</b>', photo_data$common_name,
                                                  paste0('<i>(', photo_data$latin_name, ')</i>')),
                                            paste0("<br><b>Score:</b>", round(photo_data$score, digits = 2), ''),
-                                           paste0("<img src = ", photo_data$url_s,
-                                                  " width='100%'>"),
+                                           paste0("<br><img src = ", photo_data$url_l,
+                                                  " width='400px'>"),
                                            paste0("<br>", photo_data$license),
                                            paste0('<br><a href="',
                                                   paste0('https://www.flickr.com/photos/',
@@ -82,7 +82,8 @@ server <- function(input,output) {
                                                   '">Owner/Image details</a>')
                                            ),
                             popupOptions = list(keepInView = TRUE,
-                                             zoomAnimation = TRUE))
+                                                zoomAnimation = TRUE,
+                                                maxWidth = 500))
 
   output$mymap <- renderLeaflet(map)
   
