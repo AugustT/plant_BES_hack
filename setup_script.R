@@ -124,11 +124,11 @@ for(i in 1:5500){#nrow(photo_meta)){
 #             col.names = FALSE,
 #             quote = TRUE)
 
-# ### Merge extra info across
-# photo_meta <- read.csv('photo_metadata.csv')
-# ided_already <- read.csv('id_results.csv', header = FALSE)
-# 
-# ided_already$url_l <- photo_meta$url_l[match(ided_already$V2, photo_meta$id)]
-# head(ided_already)
-# write.csv(ided_already, file = 'id_results.csv',
-#           row.names = FALSE, col.names = FALSE)
+### Merge extra info across
+photo_meta <- read.csv('photo_metadata.csv')
+ided_already <- read.csv('id_results.csv', header = FALSE)
+
+ided_already$url_l <- photo_meta$url_l[match(ided_already$V2, photo_meta$id)]
+head(ided_already)
+write.table(ided_already, file = 'id_results.csv', sep = ',',
+            row.names = FALSE, col.names = FALSE)
