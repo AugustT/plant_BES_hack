@@ -5,26 +5,30 @@ library(leaflet)
 # library(photosearcher)
 # library(plantnet)
 
-photo_data <- read.csv('id_results.csv',
-                         col.names = c('row','id', 'owner', 'title',
-                                     'datetaken', 'latitude',
-                                     'longitude', 'url_s', 'score',
-                                     'latin_name', 'common_name',
-                                     'license_code', 'license', 'url_l'),
-                         allowEscapes = TRUE)
-# remove duplicates #
-photo_data <- dplyr::distinct(photo_data)
+# photo_data <- read.csv('id_results.csv',
+#                          col.names = c('row','id', 'owner', 'title',
+#                                      'datetaken', 'latitude',
+#                                      'longitude', 'url_s', 'score',
+#                                      'latin_name', 'common_name',
+#                                      'license_code', 'license', 'url_l'),
+#                          allowEscapes = TRUE)
+# # remove duplicates #
+# photo_data <- dplyr::distinct(photo_data)
+# 
+# 
+# # drop the firsrt column
+# photo_data <- photo_data[,-1]
+# photo_data$license_code <- as.numeric(as.character(photo_data$license_code))
+# photo_data$latitude <- as.numeric(as.character(photo_data$latitude))
+# photo_data$longitude <- as.numeric(as.character(photo_data$longitude))
+# photo_data$score <- as.numeric(as.character(photo_data$score))
+# 
+# photo_data <- na.omit(photo_data)
+# nrow(photo_data)
+# 
+# save(photo_data, file = 'photo_data.rdata')
 
-
-# drop the firsrt column
-photo_data <- photo_data[,-1]
-photo_data$license_code <- as.numeric(as.character(photo_data$license_code))
-photo_data$latitude <- as.numeric(as.character(photo_data$latitude))
-photo_data$longitude <- as.numeric(as.character(photo_data$longitude))
-photo_data$score <- as.numeric(as.character(photo_data$score))
-
-photo_data <- na.omit(photo_data)
-nrow(photo_data)
+load('photo_data.rdata')
 
 ui <- fluidPage(
   titlePanel("AI validated plant observations in London"),
