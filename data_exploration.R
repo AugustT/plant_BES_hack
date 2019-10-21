@@ -13,7 +13,7 @@ photo_data <- dplyr::distinct(photo_data)
 
 # drop the firrt column
 photo_data <- photo_data[,-1]
-photo_data$license_code <- as.numeric(as.character(photo_data$image_license_code))
+photo_data$image_license_code <- as.numeric(as.character(photo_data$image_license_code))
 photo_data$latitude <- as.numeric(as.character(photo_data$latitude))
 photo_data$longitude <- as.numeric(as.character(photo_data$longitude))
 photo_data$classification_score <- as.numeric(as.character(photo_data$classification_score))
