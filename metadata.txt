@@ -22,8 +22,8 @@ longitude: longitude of the image location
 classification_score: The score given to the species classification by the PlantNet API. This value ranges from 0 (not confident), to 1 (very confident)
 latin_name: Latin name assigned by PlantNet
 common_name_english: Common English name assigned by PlantNet
-license_code: The image license code (see https://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html)
-license: The license code, converted to readable text
+image_license_code: The image license code (see https://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html)
+image_license: The license code, converted to readable text
 url_large_image: url for a large version of the image
 url_small_image: url for a small version of the image
 image_information_link: A link to a page with information on the image, including the owner name, full description if given, etc.
