@@ -39,7 +39,7 @@ photo_meta <- photo_meta[order(photo_meta$datetaken, decreasing = TRUE),]
 
 nrow(photo_meta)
 
-ided_already <- read.csv('id_results.csv', header = FALSE)
+ided_already <- read.csv('id_results_london.csv', header = FALSE)
 
 ided_already$V5 <- as.Date(ided_already$V5, format = '%d/%m/%Y')
 ided_already <- ided_already[!is.na(ided_already$V5), ]
@@ -70,7 +70,7 @@ license_decode <- function(code){
          NA)
 }
 
-for(i in 1:5500){#nrow(photo_meta)){
+for(i in 1:20000){#nrow(photo_meta)){
   cat('image', i,'\n')
   id <- identify(key = tokens$plantnet,
                  imageURL = as.character(photo_meta$url_l[i]))
@@ -81,7 +81,7 @@ for(i in 1:5500){#nrow(photo_meta)){
                  id[1,],
                  photo_meta[i, 'license'],
                  license_decode(photo_meta[i, 'license']))
-    write.table(file = 'id_results.csv',
+    write.table(file = 'id_results_london.csv',
                 x = id_full,
                 sep = ',',
                 append = TRUE,
@@ -92,11 +92,11 @@ for(i in 1:5500){#nrow(photo_meta)){
 
 # ### Merge extra info across
 # photo_meta <- read.csv('photo_metadata.csv')
-# ided_already <- read.csv('id_results.csv', header = FALSE)
+# ided_already <- read.csv('id_results_london.csv', header = FALSE)
 # 
 # ided_already$license_code <- photo_meta$license[match(ided_already$V2, photo_meta$id)]
 # head(ided_already)
-# write.csv(ided_already, file = 'id_results.csv',
+# write.csv(ided_already, file = 'id_results_london.csv',
 #           row.names = FALSE, col.names = FALSE)
 # 
 # license_decode <- function(code){
@@ -116,7 +116,7 @@ for(i in 1:5500){#nrow(photo_meta)){
 # }
 # 
 # ided_already$license <- unlist(sapply(FUN = license_decode, X = ided_already$V12))
-# write.table(file = 'id_results.csv',
+# write.table(file = 'id_results_london.csv',
 #             x = ided_already,
 #             sep = ',',
 #             append = FALSE,
@@ -126,9 +126,9 @@ for(i in 1:5500){#nrow(photo_meta)){
 
 ### Merge extra info across
 photo_meta <- read.csv('photo_metadata.csv')
-ided_already <- read.csv('id_results.csv', header = FALSE)
+ided_already <- read.csv('id_results_london.csv', header = FALSE)
 
 ided_already$url_l <- photo_meta$url_l[match(ided_already$V2, photo_meta$id)]
 head(ided_already)
-write.table(ided_already, file = 'id_results.csv', sep = ',',
+write.table(ided_already, file = 'id_results_london.csv', sep = ',',
             row.names = FALSE, col.names = FALSE)
